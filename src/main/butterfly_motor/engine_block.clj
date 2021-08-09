@@ -58,7 +58,7 @@
         piston/piston-masks)
        (m/rotatec [Math/PI 0 0])))
 
-(do
+(comment
 
  (->> engine-block
       (s/write-scad)

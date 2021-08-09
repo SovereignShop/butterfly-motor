@@ -9,16 +9,22 @@
    [scad-clj.model :as m]
    [scad-clj.scad :as s]))
 
+(def intake-assembly
+  (m/union
+   engine-intake/intake
+   (m/difference (->> engine-housing/engine-case
+                      (m/rotatec [u/pi 0 0])
+                      (m/translate [0 0 (- p/intake-hull-height 5/6)]))
+                 engine-intake/intake-inner-hull)))
+
 (def full-assembly
   (m/union
-   (->> engine-housing/engine-case
-        (m/rotatec [u/pi 0 0]))
-   engine-intake/intake
+   intake-assembly
    #_(->> engine-housing/engine-case-lid
-        (m/translate [0 0 (- (+ (/ p/engine-outer-block-height 2)
-                                p/engine-housing-lid-inset-distance))]))
-   (->> engine-block/engine-block
-        (m/rotatec [0 0 (/ u/pi 8)]))))
+          (m/translate [0 0 (- (+ (/ p/engine-outer-block-height 2)
+                                  p/engine-housing-lid-inset-distance))]))
+   #_(->> engine-block/engine-block
+          (m/rotatec [0 0 (/ u/pi 8)]))))
 
 (->> (m/union full-assembly)
      (s/write-scad)

@@ -2,6 +2,7 @@
   (:require
    [scad-clj.model :as m]
    [scad-clj.scad :as s]
+   [butterfly-motor.engine-intake :as intake]
    [butterfly-motor.params :as p]
    [butterfly-motor.utils :as u]))
 
@@ -34,12 +35,14 @@
 
 (def engine-case-side
   (->> (m/difference outer-shape inner-shape)
-       (m/extrude-linear {:height p/engine-outer-block-height :center true})))
+       (m/extrude-linear {:height (+ p/engine-outer-block-height p/intake-hull-height) :center true})))
 
 (def engine-bottom
-  (->> outer-shape
-       (m/extrude-linear {:height p/wall-thickness :center false})
-       (m/translate [0 0 (- (u/half p/engine-outer-block-height))])))
+  (m/difference
+   (->> outer-shape
+        (m/extrude-linear {:height p/intake-hull-height :center false})
+        (m/translate [0 0 (- (u/half (+ p/intake-hull-height p/engine-outer-block-height)) )]))
+   intake/intake-inner-hull))
 
 (def engine-case
   (m/union engine-case-side engine-bottom))
@@ -55,6 +58,7 @@
         (m/translate [0 0 (+ (/ p/engine-outer-block-height 2)
                              p/engine-housing-lid-inset-distance)]))))
 
-#_(->> engine-case
-     (s/write-scad)
-     (spit "test.scad"))
+(do
+  (->> engine-case
+       (s/write-scad)
+       (spit "test.scad")))

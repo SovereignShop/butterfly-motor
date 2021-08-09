@@ -23,6 +23,7 @@
 
 (def intake-outer-radius 12)
 (def intake-inner-radius (- intake-outer-radius wall-thickness))
+(def intake-hull-height 10)
 (def center-cylinder-height (+ piston-length
                                (* 2 wall-thickness)
                                (* 2 piston-gasket-outset-distance)))
