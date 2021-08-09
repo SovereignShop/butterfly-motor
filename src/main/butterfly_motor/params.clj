@@ -9,26 +9,28 @@
 ;; Make wall thickness a multiple of nozzle diameter
 (def wall-thickness (u/closest-multiple 2 nozzle-diameter))
 
-(def piston-ball-radius 4)
+(def piston-wheel-outer-radius 4)
+(def piston-wheel-inner-radius 2)
+(def piston-wheel-height 2.5)
+
 (def piston-gasket-initial-offset 3)
-(def piston-radius (+ piston-ball-radius (* 2 wall-thickness)))
-(def piston-height 40)
+(def piston-height 25)
 (def piston-width 5)
-(def piston-length 20)
+(def piston-length 5)
 
 (def piston-gasket-size 4)
 (def piston-gasket-inset-distance 2)
 (def piston-gasket-outset-distance (- piston-gasket-size piston-gasket-inset-distance))
 (def piston-gasket-thickness 2)
 
-(def intake-outer-radius 12)
+(def intake-outer-radius 10)
 (def intake-inner-radius (- intake-outer-radius wall-thickness))
-(def intake-hull-height 10)
+(def intake-hull-height 6)
 (def center-cylinder-height (+ piston-length
                                (* 2 wall-thickness)
                                (* 2 piston-gasket-outset-distance)))
 
-(def engine-block-outer-radius (+ intake-outer-radius (* 5/4 piston-length)))
+(def engine-block-outer-radius (+ intake-outer-radius piston-height tolerance))
 (def engine-block-inner-radius (+ intake-outer-radius tolerance))
 (def engine-block-height (+ piston-length
                             (* 2 wall-thickness)
@@ -40,7 +42,7 @@
 (def engine-housing-lid-inset-distance 2)
 
 (def intake-height (+ (/ center-cylinder-height 2) piston-length))
-(def intake-opening-mask-height (- engine-block-height (* 2 wall-thickness)))
+(def intake-opening-mask-height piston-length #_(- engine-block-height (* 2 wall-thickness)))
 (def intake-mask-height (- engine-block-height wall-thickness))
 (def intake-outlet-mask-height (- intake-height (/ engine-block-height 2)))
 

@@ -22,12 +22,12 @@
         (* a (Math/sin x))]))))
 
 (def outer-shape
-  (housing-shape p/engine-block-outer-radius (/ p/piston-length 2)))
+  (housing-shape p/engine-block-outer-radius (/ p/piston-height 3)))
 
 (def inner-shape
   (housing-shape
    (- p/engine-block-outer-radius p/wall-thickness)
-   (/ p/piston-length 2)))
+   (/ p/piston-height 3)))
 
 (def lid-shape
   (housing-shape (+ p/engine-block-outer-radius p/wall-thickness)

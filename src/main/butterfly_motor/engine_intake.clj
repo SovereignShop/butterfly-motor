@@ -73,8 +73,8 @@
          (m/translate [0 0 p/wall-thickness]))
     intake-opening-masks
     (->> outlet-masks
-         (m/extrude-linear {:height p/intake-outlet-mask-height :center true})
-         (m/translate [0 0 (- (/ p/engine-block-height 2))])))))
+         (m/extrude-linear {:height p/intake-mask-height :center true})
+         (m/translate [0 0 (- p/wall-thickness)])))))
 
 #_(->> intake
      (s/write-scad)

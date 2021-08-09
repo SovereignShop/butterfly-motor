@@ -23,7 +23,7 @@
    #_(->> engine-housing/engine-case-lid
           (m/translate [0 0 (- (+ (/ p/engine-outer-block-height 2)
                                   p/engine-housing-lid-inset-distance))]))
-   #_(->> engine-block/engine-block
+   (->> engine-block/engine-block
           (m/rotatec [0 0 (/ u/pi 8)]))))
 
 (->> (m/union full-assembly)
