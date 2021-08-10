@@ -5,7 +5,7 @@
          scad-app/scad-app     {:mvn/version "1.0.0"}
          scad-clj/scad-clj     {:mvn/version "0.5.3"}}
  :aliases
- {:run-m   {:main-opts ["-m" "bufferfly_motor.core"]}
+ {:run-m   {:main-opts ["-m" "butterfly-motor.core"]}
   :run-x   {:ns-default bufferfly_motor.main
             :exec-fn    greet
             :exec-args  {:name "Clojure"}}
@@ -20,5 +20,5 @@
             :exec-fn      hf.depstar/uberjar
             :exec-args    {:aot        true
                            :jar        "bufferfly_motor.jar"
-                           :main-class "bufferfly_motor.core"
+                           :main-class "butterfly-motor.core"
                            :sync-pom   true}}}}

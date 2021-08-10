@@ -14,9 +14,9 @@
 (def piston-wheel-height 2.5)
 
 (def piston-gasket-initial-offset 3)
-(def piston-height 25)
+(def piston-height 15)
 (def piston-width 5)
-(def piston-length 5)
+(def piston-length 8)
 
 (def piston-gasket-size 4)
 (def piston-gasket-inset-distance 2)
@@ -48,4 +48,4 @@
 
 (def outlet-height intake-height)
 
-(def engine-outer-block-height (+ engine-block-height (* 2 wall-thickness) (* 2 tolerance)))
+(def engine-outer-block-height engine-block-height)

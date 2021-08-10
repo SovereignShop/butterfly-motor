@@ -31,17 +31,18 @@
           (m/rotatec [0 0 (* x (/ (* u/pi 2) 4))])))))
 
 (def intake-outer-hull
-  (->> (m/hull (->> (m/cylinder 5 1 :center false)
-                    (m/translate [0 0 p/intake-hull-height]))
-               (m/cylinder p/intake-outer-radius 1 :center false))
-       (m/translate [0 0 (/ p/center-cylinder-height 2)])))
+  (->>
+   (m/hull (->> (m/cylinder 5 1 :center false)
+                (m/translate [0 0 (dec p/intake-hull-height)]))
+           (m/cylinder p/intake-outer-radius 1 :center false))
+   (m/translate [0 0 (- (u/half p/intake-hull-height))])))
 
 (def intake-inner-hull
-  (->> (m/difference
-        (m/hull (->> (m/cylinder (- 5 p/wall-thickness) 1 :center false)
-                     (m/translate [0 0 p/intake-hull-height]))
-                (m/cylinder (- p/intake-outer-radius p/wall-thickness) 1 :center false)))
-       (m/translate [0 0 (/ p/center-cylinder-height 2)])))
+  (->>
+   (m/hull (->> (m/cylinder (- 5 p/wall-thickness) 1 :center false)
+                (m/translate [0 0 (dec p/intake-hull-height)]))
+           (m/cylinder (- p/intake-outer-radius p/wall-thickness) 1 :center false))
+   (m/translate [0 0 (- (u/half p/intake-hull-height))])))
 
 (def intake-hull
   (m/difference intake-outer-hull
@@ -66,7 +67,7 @@
 
 (def intake
   (m/difference
-   (m/union intake-cylinder intake-hull)
+   (m/union intake-cylinder)
    (m/union
     (->> intake-masks
          (m/extrude-linear {:height p/intake-mask-height :center true})

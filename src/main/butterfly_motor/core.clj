@@ -6,30 +6,30 @@
    [butterfly-motor.engine-housing :as engine-housing] :reload
    [butterfly-motor.engine-intake :as engine-intake] :reload
    [butterfly-motor.params :as p] :reload
-   [scad-clj.model :as m]
-   [scad-clj.scad :as s]))
+   [scad-app.core :as scad-app]
+   [scad-clj.model :as m]))
 
 (def intake-assembly
   (m/union
    engine-intake/intake
-   (m/difference (->> engine-housing/engine-case
-                      (m/rotatec [u/pi 0 0])
-                      (m/translate [0 0 (- p/intake-hull-height 5/6)]))
-                 engine-intake/intake-inner-hull)))
+   engine-housing/engine-case))
 
 (def full-assembly
   (m/union
    intake-assembly
-   #_(->> engine-housing/engine-case-lid
-          (m/translate [0 0 (- (+ (/ p/engine-outer-block-height 2)
-                                  p/engine-housing-lid-inset-distance))]))
+   (->> engine-housing/engine-case-lid
+        (m/translate [0 0 (- (+ (/ p/engine-outer-block-height 2)
+                                p/engine-housing-lid-inset-distance))]))
    (->> engine-block/engine-block
-          (m/rotatec [0 0 (/ u/pi 8)]))))
+        (m/rotatec [0 0 (/ u/pi 8)]))))
 
-(->> (m/union full-assembly)
-     (s/write-scad)
-     (spit "test.scad"))
+(defn build [& {:keys [render?] :or {render? true}}]
+  (scad-app/build-all
+   [{:name "engine-block" :model-main intake-assembly}
+    {:name "engine-housing-lid" :model-main engine-housing/engine-case-lid}
+    {:nmae "engine-block" :model-main engine-block/engine-block}
+    {:name "full-assembly" :model-main full-assembly}]
+   {:render render?}))
 
-#_(->> engine-block
-  (s/write-scad)
-  (spit "test.scad"))
+(defn -main [& _]
+  (build))
