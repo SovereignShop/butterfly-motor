@@ -38,7 +38,7 @@
     (->> (m/union (m/circle piston-wheel-mask-radius)
                   (->> (m/square (* 2 piston-wheel-mask-radius) piston-wheel-mask-radius :center false)
                        (m/translate [(- piston-wheel-mask-radius) 0])))
-         (m/extrude-linear {:height (+ p/piston-wheel-height 1/2) :center true})))
+         (m/extrude-linear {:height (inc p/piston-wheel-height) :center true})))
 
   (def piston-wheel-axle
     (->> (m/circle 2)

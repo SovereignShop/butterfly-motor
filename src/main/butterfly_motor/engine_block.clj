@@ -43,7 +43,8 @@
   (def output-air-outlet-mask
     (->> (m/square (* 4 p/wall-thickness) (* 2 (+ p/engine-block-inner-radius p/wall-thickness))
                    :center true)
-         (m/extrude-linear {:height (* 2 p/wall-thickness) :center false})))
+         (m/extrude-linear {:height (* 2 p/wall-thickness) :center false})
+         (m/translate [0 0 6])))
 
   (def output-outer-hull
     (m/hull output-bottom-cylinder
@@ -54,8 +55,9 @@
           (m/union block-shell
                    (->> (m/difference output-outer-hull
                                       output-bottom-inner-cylinder
+                                      output-air-outlet-mask
                                       (->> output-air-outlet-mask
-                                           (m/translate [0 0 4])))
+                                           (m/rotatec [0 0 (/ u/pi 2)])))
                         (m/translate [0 0 (/ p/engine-block-height 2)])))
           piston/piston-masks)))
   )
