@@ -41,12 +41,19 @@
          (m/extrude-linear {:height (inc p/piston-wheel-height) :center true})))
 
   (def piston-wheel-axle
-    (->> (m/circle 2)
-         (m/extrude-linear {:height (/ p/piston-length 2) :center true})
+    (->> (m/circle p/piston-wheel-inner-radius)
+         (m/extrude-linear {:height (+  p/piston-width 1) :center true})
+         (m/rotatec [(/ u/pi 2) 0 0])))
+
+  (def piston-wheel-axle-mask
+    (->> (m/square (* 2 p/piston-wheel-inner-radius) (* 2 p/piston-wheel-inner-radius))
+         (m/translate [0 p/piston-wheel-inner-radius 0])
+         (m/union (m/circle p/piston-wheel-inner-radius))
+         (m/extrude-linear {:height (+ p/piston-width 3/2) :center true})
          (m/rotatec [(/ u/pi 2) 0 0])))
 
   (def piston-wheel-assembly
-    (m/union piston-wheel-axle
+    (m/union piston-wheel-axle-mask
              (->> piston-wheel-mask
                   (m/rotatec [(/ u/pi 2) 0 0]))))
 

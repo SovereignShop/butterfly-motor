@@ -10,7 +10,8 @@
    '[butterfly-motor.params :as p] :reload
    '[butterfly-motor.engine-block :as engine-block] :reload
    '[butterfly-motor.engine-housing :as engine-housing] :reload
-   '[butterfly-motor.engine-intake :as engine-intake] :reload)
+   '[butterfly-motor.engine-intake :as engine-intake] :reload
+   '[butterfly-motor.piston :as piston] :reload)
 
   (def intake-assembly
     (m/union
@@ -31,7 +32,8 @@
    [{:name "engine-bufferfly-housing" :model-main intake-assembly}
     {:name "engine-housing-lid" :model-main engine-housing/engine-case-lid}
     {:name "engine-block" :model-main engine-block/engine-block}
-    {:name "full-assembly" :model-main full-assembly}]
+    {:name "full-assembly" :model-main full-assembly}
+    {:name "piston" :model-main piston/piston}]
    {:render render?}))
 
 (defn -main [& _]
