@@ -9,17 +9,17 @@
 ;; Make wall thickness a multiple of nozzle diameter
 (def wall-thickness (u/closest-multiple 2 nozzle-diameter))
 
-(def piston-wheel-outer-radius 4.5)
-(def piston-wheel-inner-radius 2)
-(def piston-wheel-height 4)
+(def piston-wheel-outer-radius 2.5)
+(def piston-wheel-inner-radius 1)
+(def piston-wheel-height 2.5)
 
 (def piston-gasket-initial-offset 3)
 (def piston-height 15)
 (def piston-width 5)
 (def piston-length 8)
 
-(def piston-gasket-size 4)
-(def piston-gasket-inset-distance 2)
+(def piston-gasket-size 3/2)
+(def piston-gasket-inset-distance 3/4)
 (def piston-gasket-outset-distance (- piston-gasket-size piston-gasket-inset-distance))
 (def piston-gasket-thickness 2)
 
@@ -31,7 +31,7 @@
                                (* 2 piston-gasket-outset-distance)))
 
 (def engine-block-outer-radius (+ intake-outer-radius piston-height tolerance))
-(def engine-block-inner-radius (+ intake-outer-radius tolerance))
+(def engine-block-inner-radius (+ intake-outer-radius tolerance 0.1))
 (def engine-block-height (+ piston-length
                             (* 2 wall-thickness)
                             (* 2 piston-gasket-outset-distance)))

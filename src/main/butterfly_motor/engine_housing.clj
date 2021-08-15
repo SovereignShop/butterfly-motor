@@ -24,20 +24,25 @@
           (* a (Math/sin x))]))))
 
   (def outer-shape
-    (housing-shape p/engine-block-outer-radius (/ p/piston-height 3)))
+    (housing-shape p/engine-block-outer-radius (/ p/piston-height 3.3)))
 
   (def inner-shape
     (housing-shape
      (- p/engine-block-outer-radius p/wall-thickness)
-     (/ p/piston-height 3)))
+     (/ p/piston-height 3.3)))
 
   (def lid-shape
     (housing-shape (+ p/engine-block-outer-radius p/wall-thickness)
-                   (/ p/piston-height 3)))
+                   (/ p/piston-height 3.3)))
 
   (def engine-case-side
     (->> (m/difference outer-shape inner-shape)
-         (m/extrude-linear {:height (+ p/engine-outer-block-height p/intake-hull-height) :center true})))
+         (m/extrude-linear {:height (+ p/engine-outer-block-height p/intake-hull-height
+                                       (- p/engine-housing-lid-height
+                                          p/engine-housing-lid-inset-distance))
+                            :center true})
+         (m/translate [0 0 (u/half (- p/engine-housing-lid-height
+                                      p/engine-housing-lid-inset-distance))])))
 
   (def engine-bottom
     (m/difference

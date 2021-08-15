@@ -33,7 +33,8 @@
     {:name "engine-housing-lid" :model-main engine-housing/engine-case-lid}
     {:name "engine-block" :model-main engine-block/engine-block}
     {:name "full-assembly" :model-main full-assembly}
-    {:name "piston" :model-main piston/piston}]
+    {:name "piston" :model-main piston/piston}
+    {:name "piston-gasket" :model-main piston/piston-gasket}]
    {:render render?}))
 
 (defn -main [& _]

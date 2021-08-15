@@ -5,25 +5,29 @@
    [butterfly-motor.utils :as u]
    [butterfly-motor.params :as p]))
 
+(def piston-cube-height
+  (- p/piston-height (- p/piston-wheel-outer-radius p/piston-wheel-inner-radius)))
+
+(def piston-wheel-mask-radius
+  (inc p/piston-wheel-outer-radius))
+
+(def first-gasket-z-position
+  (+ (- (/ p/piston-height 2)) p/piston-gasket-initial-offset))
+
 (binding [m/*fn* 150]
 
-  (def piston-cube-height
-    (- p/piston-height (- p/piston-wheel-outer-radius p/piston-wheel-inner-radius)))
-
-  (def piston-wheel-mask-radius
-    (inc p/piston-wheel-outer-radius))
-
-  (def first-gasket-z-position
-    (+ (- (/ p/piston-height 2)) p/piston-gasket-initial-offset))
-
   (def piston-gasket-outer-square
-    (m/square (+ p/piston-width p/piston-gasket-outset-distance)
-              (+ p/piston-length p/piston-gasket-outset-distance)
+    (m/square p/piston-width #_(+ p/piston-width p/piston-gasket-outset-distance)
+              p/piston-length #_(+ p/piston-length p/piston-gasket-outset-distance)
               :center true))
 
   (def piston-gasket-inner-square
-    (m/square (- p/piston-width p/piston-gasket-inset-distance)
-              (- p/piston-length p/piston-gasket-inset-distance)
+    (m/square (- p/piston-width
+                 (* 2 p/piston-gasket-inset-distance)
+                 (* 2 p/piston-gasket-outset-distance))
+              (- p/piston-length
+                 (* 2 p/piston-gasket-inset-distance)
+                 (* 2 p/piston-gasket-outset-distance))
               :center true))
 
   (def piston-gasket-shape
@@ -42,14 +46,14 @@
 
   (def piston-wheel-axle
     (->> (m/circle p/piston-wheel-inner-radius)
-         (m/extrude-linear {:height (+  p/piston-width 1) :center true})
+         (m/extrude-linear {:height p/piston-width :center true})
          (m/rotatec [(/ u/pi 2) 0 0])))
 
   (def piston-wheel-axle-mask
     (->> (m/square (* 2 p/piston-wheel-inner-radius) (* 2 p/piston-wheel-inner-radius))
          (m/translate [0 p/piston-wheel-inner-radius 0])
          (m/union (m/circle p/piston-wheel-inner-radius))
-         (m/extrude-linear {:height (+ p/piston-width 3/2) :center true})
+         (m/extrude-linear {:height p/piston-width :center true})
          (m/rotatec [(/ u/pi 2) 0 0])))
 
   (def piston-wheel-assembly
@@ -76,10 +80,16 @@
 
   (def piston
     (m/difference
-     (->> (m/square p/piston-width p/piston-length :center true)
-          (m/extrude-linear {:height piston-cube-height :center true}))
+     (->> (m/square (- p/piston-width (* 2 p/piston-gasket-outset-distance))
+                    (- p/piston-length (* 2 p/piston-gasket-outset-distance))
+                    :center true)
+          (m/extrude-linear {:height piston-cube-height :center true})
+          (m/union (->> (m/square (- p/piston-width (* 2 p/piston-gasket-outset-distance))
+                                  (inc (- p/piston-length (* 2 p/piston-gasket-outset-distance)))
+                                  :center true)
+                        (m/extrude-linear {:height 4 :center false})
+                        (m/translate [0 0 (- (u/half piston-cube-height) 4)]))))
      (m/union
       (->> piston-wheel-assembly (m/translate [0 0 (- (u/half piston-cube-height) 1)]))
       (->> piston-gasket (m/translate [0 0 first-gasket-z-position]))
-      (->> piston-gasket (m/translate [0 0 (+ first-gasket-z-position (* 2 p/piston-gasket-thickness))])))))
-  )
+      (->> piston-gasket (m/translate [0 0 (+ first-gasket-z-position (* 2 p/piston-gasket-thickness))]))))))

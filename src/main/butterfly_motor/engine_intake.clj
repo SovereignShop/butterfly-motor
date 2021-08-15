@@ -5,13 +5,41 @@
    [scad-clj.model :as m]
    [scad-clj.scad :as s]))
 
+(def opening-angle (+ (/ u/pi 8)
+                      (/ u/pi 30)))
+
 (def intake-mask-translation
   (partial m/translate [(* p/wall-thickness  (Math/cos (/ u/pi 8)))
                         (* p/wall-thickness  (Math/sin (/ u/pi 8)))]))
 
+
+
+(binding [m/*fn* 100]
+  (def intake-seal-ring
+    (->> (m/circle 2/3)
+         (m/translate [p/intake-outer-radius 0])
+         (m/extrude-rotate {:angle 360})))
+
+  (def intake-seal-line
+    (->> (m/hull (->> (m/circle 1/4)
+                      (m/translate [0 (* 2/3 p/intake-outer-radius)]))
+                 (->> (m/circle 2/3)
+                      (m/translate [0 p/intake-outer-radius])))))
+
+  (def intake-seal
+    (m/union (->> intake-seal-ring
+                  (m/translate [0 0 1.2]))
+             (->> (m/union (for [x (range 8)]
+                             (->> intake-seal-line
+                                  (m/rotatec [0 0 (+ (- (/ u/pi 26)) (* x (/ (* 2 u/pi) 8)))]))))
+                  (m/extrude-linear {:height (- p/center-cylinder-height 1) :center false})
+                  (m/translate [0 0 1]))
+             (->> intake-seal-ring
+                  (m/translate [0 0 (- p/center-cylinder-height 1.2)])))))
+
 (def intake-mask-wedge
   (->> (u/semi-circle (- p/intake-inner-radius p/wall-thickness)
-                      (/ u/pi 4))
+                      opening-angle)
        intake-mask-translation))
 
 (def intake-mask
@@ -38,11 +66,10 @@
    (m/translate [0 0 (- (u/half p/intake-hull-height))])))
 
 (def intake-inner-hull
-  (->>
-   (m/hull (->> (m/cylinder (- 5 p/wall-thickness) 1 :center false)
-                (m/translate [0 0 (dec p/intake-hull-height)]))
-           (m/cylinder (- p/intake-outer-radius p/wall-thickness) 1 :center false))
-   (m/translate [0 0 (- (u/half p/intake-hull-height))])))
+  (->> (m/hull (->> (m/cylinder (- 5 p/wall-thickness) 1 :center false)
+                    (m/translate [0 0 (dec p/intake-hull-height)]))
+               (m/cylinder (- p/intake-outer-radius p/wall-thickness) 1 :center false))
+       (m/translate [0 0 (- (u/half p/intake-hull-height))])))
 
 (def intake-hull
   (m/difference intake-outer-hull
@@ -56,7 +83,7 @@
        (m/extrude-linear {:height p/center-cylinder-height :center true})))
 
 (def intake-opening-mask
-  (->> (u/semi-circle (+ 3 p/intake-outer-radius) (/ u/pi 4))
+  (->> (u/semi-circle (+ 3 p/intake-outer-radius) opening-angle)
        intake-mask-translation))
 
 (def intake-opening-masks
@@ -69,6 +96,8 @@
   (m/difference
    (m/union intake-cylinder)
    (m/union
+    (->> intake-seal
+         (m/translate [0 0 (- (u/half p/center-cylinder-height))]))
     (->> intake-masks
          (m/extrude-linear {:height p/intake-mask-height :center true})
          (m/translate [0 0 p/wall-thickness]))
