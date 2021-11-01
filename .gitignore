@@ -1,5 +1,8 @@
 pom.xml
 pom.xml.asc
+output/scad/*.scad
+*.scad
+*.stl
 *.jar
 *.class
 /lib/
